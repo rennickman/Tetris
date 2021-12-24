@@ -35,6 +35,13 @@ export const useStage = (player, resetPlayer) => {
                 });
             });
 
+            // Check for collisions
+            if (player.collided) {
+
+                // Reset the Player
+                resetPlayer();
+            }
+
             return newStage;
         };
 
@@ -42,7 +49,7 @@ export const useStage = (player, resetPlayer) => {
         // Update the Stage in state
         setStage(prev => updateStage(prev));
 
-    }, [player]);
+    }, [player, resetPlayer]);
 
 
     return [stage, setStage];

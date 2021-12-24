@@ -4,7 +4,7 @@ import Stage from './Stage';
 import Display from './Display';
 import StartButton from './StartButton';
 import { StyledTetrisWrapper, StyledTetris } from './styles/StyledTetris';
-import { createStage } from '../gameHelpers';
+import { checkCollision, createStage } from '../gameHelpers';
 import { usePlayer } from '../hooks/usePlayer';
 import { useStage } from '../hooks/useStage';
 
@@ -19,7 +19,7 @@ const Tetris = () => {
 
     // Use Customer Hooks to get Player and Stage
     const [player, updatePlayerPos, resetPlayer] = usePlayer();
-    const [stage, setStage] = useStage(player);
+    const [stage, setStage] = useStage(player, resetPlayer);
 
 
     // Log any Re-Renders
@@ -29,8 +29,12 @@ const Tetris = () => {
     // Method to move the Player by changin the X-coordinate
     const movePlayer = dir => {
 
-        // Update the Player X-Coordinate
-        updatePlayerPos({ x: dir, y: 0 });
+        // Check that there are no collisions
+        if (!checkCollision(player, stage, { x: dir, y: 0})) {
+
+            // Update the Player X-Coordinate
+            updatePlayerPos({ x: dir, y: 0 });
+        }
     };
 
 
@@ -40,14 +44,34 @@ const Tetris = () => {
         // Reset everything
         setStage(createStage());
         resetPlayer();
+        setGameOver(false);
     };
 
 
     // Method to Drop the player by changing the Y-coordinate
     const drop = () => {
 
-        // Update the Player Y-Coordinate
-        updatePlayerPos({ x: 0, y: 1, collided: false });
+        // Check that there are no collisions
+        if (!checkCollision(player, stage, { x: 0, y: 1 })) {
+
+            // Update the Player Y-Coordinate
+            updatePlayerPos({ x: 0, y: 1, collided: false });
+
+        } else {
+
+            // Check for Game Over
+            if (player.pos.y < 1) {
+                console.log("GAME OVER!!!");
+
+                // Set Value of GameOver
+                setGameOver(true);
+                // Stop Pieces from dropping
+                setDropTime(null);
+            }
+
+            // Set Collided to true if there is a collision
+            updatePlayerPos({ x: 0, y: 0, collided: true });
+        }
     };
 
 
