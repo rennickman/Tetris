@@ -18,7 +18,7 @@ const Tetris = () => {
     const [gameOver, setGameOver] = useState(false);	
 
     // Use Customer Hooks to get Player and Stage
-    const [player, updatePlayerPos, resetPlayer] = usePlayer();
+    const [player, updatePlayerPos, resetPlayer, playerRotate] = usePlayer();
     const [stage, setStage] = useStage(player, resetPlayer);
 
 
@@ -78,6 +78,7 @@ const Tetris = () => {
     // Method to drop the Player
     const dropPlayer = () => {
 
+        // Call the drop Method
         drop();
     };
 
@@ -99,6 +100,10 @@ const Tetris = () => {
             // Check if KeyCode is Down Arrow 
             } else if (keyCode === 40) {
                 dropPlayer();
+
+            // Check if KeyCode is Up Arrow 
+            } else if (keyCode === 38) {
+                playerRotate(stage, 1);
             }
         }
     };
