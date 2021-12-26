@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 
 
 
-
+// Custom Use Interval Hook taken from overeacted.io
 export function useInterval(callback, delay) {
 
     const savedCallback = useRef();
